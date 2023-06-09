@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+</head>
+<body>
+
+<nav th:fragment="menu" class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" th:href="@{/overpayment/index}">Главная</a>
+        <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li sec:authorize="hasRole('USER')" class="nav-item dropdown">
+                    <a class="nav-link dropdown-trigger"
+                       href="#"
+                       id="menuFindCitizen"
+                       role="button"
+                       data-bs-toggle="dropdown"
+                       aria-expanded="false"
+                    >
+                        Поиск гражданина
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="menuFindCitizen">
+                        <li><a class="dropdown-item"
+                               href="/overpayment/vievFindCitizenBySnils"
+                               id="vievFindBySnils">Поиск по СНИЛС</a></li>
+                        <li><a class="dropdown-item"
+                               href="/overpayment/vievFindCitizenByFio"
+                               id="vievFindByFio">Поиск по ФИО</a></li>
+                        <li><a class="dropdown-item"
+                               href="/overpayment/vievFindCitizenByDistrict"
+                               id="vievFindByDistrict">Поиск по району</a></li>
+                    </ul>
+                </li>
+
+                <li sec:authorize="hasRole('USER')" class="nav-item dropdown">
+                    <a class="nav-link" aria-current="page"
+                       href="/overpayment/menuAddCitizen"
+                       id="menuAddCitizen">
+                        Добавить гражданина
+                    </a>
+                </li>
+
+                <li sec:authorize="hasRole('USER')" class="nav-item">
+                    <a class="nav-link" aria-current="page"
+                       href="/overpayment/statistics"
+                       id="menuStatistics">
+                        Статистика
+                    </a>
+                </li>
+                <li sec:authorize="hasRole('USER')" class="nav-item dropdown" >
+                    <a class="nav-link dropdown-trigger"
+                       href="#"
+                       role="button"
+                       data-bs-toggle="dropdown"
+                       aria-expanded="false"
+                       id="menuReferenceBook"
+                    >
+                        Справочник
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="menuReferenceBook">
+                        <li><a class="dropdown-item"
+                               href="/overpayment/referenceBook/vievReferenceBookReasonsForOverpayments">Причины переплат</a></li>
+                        <li><a class="dropdown-item"
+                               href="/overpayment/referenceBook/vievReferenceBookSpecificationOfTheReasonsForOverpayments">Конкретизация причин переплат</a></li>
+                        <li><a class="dropdown-item"
+                               href="/overpayment/referenceBook/vievDepartment">Управления</a></li>
+                        <li><a class="dropdown-item"
+                               href="/overpayment/referenceBook/vievDistrict">Районы</a></li>
+                        <li><a class="dropdown-item"
+                               href="/overpayment/referenceBook/vievDocuments">Шаблоны документов</a></li>
+                    </ul>
+                </li>
+
+                <li sec:authorize="hasRole('OZIADMIN')" class="nav-item dropdown">
+                    <a class="nav-link" aria-current="page"
+                       href="/admin"
+                       id="menuAdmin">
+                        Админка
+                    </a>
+                </li>
+
+            </ul>
+            <form
+                    class="d-flex"
+                    id="logout"
+                    name="logout"
+                    th:action="@{/logout}"
+                    method="post"
+            >
+                <div class="text-center text-success align-self-center mx-2">Пользователь:
+                    <span sec:authorize="isAuthenticated()"
+                          sec:authentication="principal.username">Пользователь</span>
+                </div>
+
+            </form>
+            <!-- Часы -->
+            <ul class="nav navbar-nav navbar-right">
+                <li class="btn btn-light navbar-btn hours menu"></li>
+                <li class="btn btn-light navbar-btn min menu"></li>
+                <li class="btn btn-light navbar-btn sec menu"></li>
+            </ul>
+            <script>
+                $(document).ready(function() {
+                    setInterval( function() {
+                        let hours = new Date().getHours();
+                        $(".hours.menu").html(( hours < 10 ? "0" : "" ) + hours);
+                        let minutes = new Date().getMinutes();
+                        $(".min.menu").html(( minutes < 10 ? "0" : "" ) + minutes);
+                        let seconds = new Date().getSeconds();
+                        $(".sec.menu").html(( seconds < 10 ? "0" : "" ) + seconds);
+                    }, 1000);
+                });
+            </script>
+        </div>
+    </div>
+</nav>
+
+</body>
+</html>

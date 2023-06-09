@@ -1,0 +1,33 @@
+server:
+  port: 8099
+app:
+  dbacs:
+    datasource:
+      url: jdbc:db2://10.41.0.21:50000/ACS
+      username: db2admin
+      password: db2admin
+  dbtimetracking:
+    datasource:
+      #url: jdbc:mysql://10.41.0.247:3306/timeTracking?useLegacyDatetimeCode=false&amp&serverTimezone=UTC
+      url: jdbc:mysql://10.41.0.247:3306/timeTracking?serverTimezone=Europe/Moscow&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false
+      username: root
+      password: 654321
+spring:
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: update
+    generate-ddl: true
+
+org:
+  opfr:
+    acsAddress: http://sa04100uitwa248.0041.pfr.ru:18003
+    requestType: AuthAccess
+    applId: 174
+    roles:
+      IT: 113
+      TEX: 114
+      KOOR: 115

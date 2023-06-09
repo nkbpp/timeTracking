@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="fragment/head :: head">
+</head>
+
+<body class="bg-dark" style="--bs-bg-opacity: .05;">
+
+<div th:insert="fragment/menu :: menu"></div>
+
+<div id="mainContainer"></div>
+
+<form method="post" id="formTimeControl" >
+
+    <div class="btn-group">
+        <input type="radio" class="btn-check" name="statusRadio" id="atwork" autocomplete="off" checked/>
+        <label class="btn btn-secondary" for="atwork">На работе</label>
+
+        <input type="radio" class="btn-check" name="statusRadio" id="businessTrip" autocomplete="off"/>
+        <label class="btn btn-secondary" for="businessTrip">Командировка</label>
+
+        <input type="radio" class="btn-check" name="statusRadio" id="vacation" autocomplete="off"/>
+        <label class="btn btn-secondary" for="vacation">Отпуск</label>
+
+        <input type="radio" class="btn-check" name="statusRadio" id="sickLeave" autocomplete="off"/>
+        <label class="btn btn-secondary" for="sickLeave">Больничный</label>
+    </div>
+
+    <div id="marker">
+        <div>
+            Утренняя отметка:
+            <input type="radio" class="btn-check" name="morning" id="morning" autocomplete="off"/>
+            <label class="btn btn-secondary" for="morning"></label>
+        </div>
+        <div>
+            Вечерняя отметка:
+            <input type="radio" class="btn-check" name="evening" id="evening" autocomplete="off"/>
+            <label class="btn btn-secondary" for="evening"></label>
+        </div>
+    </div>
+
+
+    <script>
+        $(document).ready(function () {
+
+
+        });
+
+    </script>
+
+</form>
+
+<!--TOASTS-->
+<div class="toast-container position-absolute p-3 bottom-0 end-0">
+</div>
+
+</body>
+<div th:replace="fragment/bottom :: bottom"></div>
+</html>
