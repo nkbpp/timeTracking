@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head th:fragment="head">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
 
-    <title>Анализ и учет переплат</title>
+    <title>Учёт рабочего времени</title>
     <!--<meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>
     <meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>-->
 
@@ -12,7 +13,14 @@
 
     <script type="text/javascript" src="/webjars/jquery/3.6.1/jquery.js"></script>
 
-    <script type="text/javascript" th:src="@{/js/viev/timeTracking.js}"></script>
+    <script th:inline="javascript">
+        var  TIMEPARAM = [[${timeParam}]];
+        console.log(TIMEPARAM);
+    </script>
+    <script type="text/javascript" th:src="@{/js/global.js}"></script>
+    <script type="text/javascript" th:src="@{/js/spinner.js}"></script>
+
+
     <!--<script type="text/javascript" th:src="@{/js/spinner.js}"></script>
     <script type="text/javascript" th:src="@{/js/globalFunction.js}"></script>-->
     <script type="text/javascript" src="/webjars/selectize.js/0.13.3/js/standalone/selectize.js"></script>

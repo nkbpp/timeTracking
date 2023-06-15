@@ -9,7 +9,7 @@ public class AccountSpecification {
     /**
      * id ресурса (many to one)
      */
-    private static Specification<Accounts> findAll() {
+    public static Specification<Accounts> findAll() {
         return (root, query, criteriaBuilder) -> {
             Join<Accounts, Res> accountRes = root.join(Accounts_.RES);
             return criteriaBuilder.equal(accountRes.get(Res_.CODE_RES), 174L);

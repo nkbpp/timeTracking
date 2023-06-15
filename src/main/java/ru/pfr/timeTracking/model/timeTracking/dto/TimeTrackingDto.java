@@ -39,6 +39,8 @@ public class TimeTrackingDto {
     @NotBlank
     private String name;
 
+    private String inicial;
+
     private String otch;
 
     //Статусы

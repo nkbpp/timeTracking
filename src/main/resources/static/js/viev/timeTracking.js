@@ -30,12 +30,14 @@ $(document).ready(function () {
                 markerInvisible()
             }
 
-            console.log(data);
+            //console.log(data);
+
         },
         error: function (response) {
             initialToats("Ошибка!!!", response.responseText, "err").show();
         }
     });
+
 
     //статусы
     $("body").on('change', '[name=statusRadio]', function () {
@@ -46,17 +48,17 @@ $(document).ready(function () {
         } else {
             markerInvisible()
         }
-            let uuid = $("#formTimeControl").attr("name");
-            $.ajax({
-                url: '/timeTracker/status/' + stat + '/' + uuid,
-                method: 'put',
-                success: function (data) {
-                    initialToats("Статус изменен успешно", data, "success").show();
-                },
-                error: function (response) {
-                    initialToats("Ошибка!!!", response.responseText, "err").show();
-                }
-            });
+        let uuid = $("#formTimeControl").attr("name");
+        $.ajax({
+            url: '/timeTracker/status/' + stat + '/' + uuid,
+            method: 'put',
+            success: function (data) {
+                initialToats("Статус изменен успешно", data, "success").show();
+            },
+            error: function (response) {
+                initialToats("Ошибка!!!", response.responseText, "err").show();
+            }
+        });
 
 
     });
@@ -93,7 +95,16 @@ $(document).ready(function () {
 
     });
 
-    let morningInterval = setInterval(interval, 1000, "morning", 8);
+    let dateStart = new Date();
+    dateStart.setHours(TIMEPARAM.mornBegin.hour);
+    dateStart.setMinutes(TIMEPARAM.mornBegin.minute);
+    let dateEnd = new Date();
+    dateEnd.setHours(TIMEPARAM.mornEnd.hour);
+    dateEnd.setMinutes(TIMEPARAM.mornEnd.minute);
+    let morningInterval = setInterval(interval, 1000, "morning",
+        dateStart,
+        dateEnd
+    );
 
     $("body").on('change', '#morning', function () {
         clearInterval(morningInterval);
@@ -101,7 +112,20 @@ $(document).ready(function () {
         $("label[for=morning]").removeClass("btn-secondary").removeClass("btn-warning").addClass("btn-success");
     });
 
-    let eveningInterval = setInterval(interval, 1000, "evening", 16);
+    dateStart = new Date();
+    dateStart.setHours(TIMEPARAM.evnBegin.hour);
+    dateStart.setMinutes(TIMEPARAM.evnBegin.minute);
+    /*dateStart.setHours(10);
+    dateStart.setMinutes(59);*/
+    dateEnd = new Date();
+    dateEnd.setHours(TIMEPARAM.evnEnd.hour);
+    dateEnd.setMinutes(TIMEPARAM.evnEnd.minute);
+    /*dateEnd.setHours(12);
+    dateEnd.setMinutes(0);*/
+    let eveningInterval = setInterval(interval, 1000, "evening",
+        dateStart,
+        dateEnd
+    );
 
     $("body").on('change', '#evening', function () {
         clearInterval(eveningInterval);
@@ -109,24 +133,26 @@ $(document).ready(function () {
         $("label[for=evening]").removeClass("btn-secondary").removeClass("btn-warning").addClass("btn-success");
     });
 
-
-    function interval(id, checkTime) {
-        let hours = new Date().getHours();
-        let minutes = 59 - new Date().getMinutes();
-        let seconds = 59 - new Date().getSeconds();
+    function interval(id, dateStart, dateEnd) {
+        let cDate = new Date();
         if ($(id).prop('checked')) {
             clearInterval((id == "morning") ? morningInterval : eveningInterval);
             $("label[for=" + id + "]").removeClass("btn-secondary").removeClass("btn-warning").addClass("btn-success");
             return;
-        } else if (hours == checkTime) {
+        } else if ((cDate >= dateStart && cDate <= dateEnd)) {
             $("#morning").removeProp("disabled");
             $("label[for=" + id + "]").removeClass("btn-secondary").addClass("btn-warning");
+            let d = new Date(dateEnd - cDate);
+
             $("label[for=" + id + "]").html(
-                ("00") + ":" + ((minutes < 10 ? "0" : "") + minutes) + ":" + ((seconds < 10 ? "0" : "") + seconds));
+                padTo2Digits(dateEnd.getHours() - cDate.getHours() - 1) + ":" +
+                padTo2Digits(d.getMinutes()) + ":" +
+                padTo2Digits(d.getSeconds())
+            );
             return;
-        } else if (hours < checkTime) {
+        } else if (cDate < dateStart) {
             $("#" + id).prop("disabled", true);
-            $("label[for=" + id + "]").html("Будет доступна с " + ((checkTime < 10) ? "0" : "") + checkTime + ":00");
+            $("label[for=" + id + "]").html("Будет доступна с " + padTo2Digits(dateStart.getHours()) + ":" + padTo2Digits(dateStart.getMinutes()) + ":00");
             return;
         } else {
             $("#" + id).prop("disabled", true);
@@ -137,7 +163,6 @@ $(document).ready(function () {
         }
         return;
     }
-
 
 });
 

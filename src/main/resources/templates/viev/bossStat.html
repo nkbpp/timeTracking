@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head th:replace="fragment/head :: head">
+
+</head>
+<head>
+    <script sec:authorize="hasAnyRole('ROLE_BOSS')" type="text/javascript" th:src="@{/js/viev/bossStat.js}"></script>
+</head>
+
+<body class="bg-dark" style="--bs-bg-opacity: .05;">
+
+<div th:insert="fragment/menu :: menu"></div>
+
+<form method="post" id="formItContract">
+    <div class="row m-0 my-2">
+        <div class="col-12 row ">
+            <div class="col-3">
+                <label for="dateS" class="form-label m-0">Дата c</label>
+                <input type="text" placeholder="дд.мм.гггг" class="form-control datepicker" id="dateS"
+                       name="dateS">
+            </div>
+            <div class="col-3">
+                <label for="datePo" class="form-label m-0">Дата по</label>
+                <input type="text" placeholder="дд.мм.гггг" class="form-control datepicker" id="datePo"
+                       name="datePo">
+            </div>
+            <div class="col-2 d-flex align-items-end">
+                <a class="btn btn-secondary" id="statBossFind">Найти</a>
+            </div>
+        </div>
+    </div>
+</form>
+
+<table class="table table-block table-secondary table-striped
+              table-hover table-bordered text-center caption-top table-sm m-0 p-0"
+       id="tableBossStat">
+<thead></thead>
+    <tbody></tbody>
+</table>
+
+
+<!--TOASTS-->
+<div class="toast-container position-absolute p-3 bottom-0 end-0">
+</div>
+
+</body>
+<div th:replace="fragment/bottom :: bottom"></div>
+</html>

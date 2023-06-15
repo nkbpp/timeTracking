@@ -25,10 +25,30 @@ public class TimeTrackingSpecification {
                 criteriaBuilder.equal(root.get(TimeTracking_.ID), id);
     }
 
+    public static Specification<TimeTracking> orgCodeEqual(String orgCode) {
+        return (root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get(TimeTracking_.ORG_CODE), orgCode);
+    }
+    public static Specification<TimeTracking> currentDateGt(LocalDate date) {
+        return (root, query, criteriaBuilder) ->
+                criteriaBuilder.greaterThanOrEqualTo(root.get(TimeTracking_.CURRENT_DATE), date);
+    }
+
+    public static Specification<TimeTracking> currentDateLt(LocalDate date) {
+        return (root, query, criteriaBuilder) ->
+                criteriaBuilder.lessThanOrEqualTo(root.get(TimeTracking_.CURRENT_DATE), date);
+    }
+
     public static Specification<TimeTracking> now(String login, LocalDate currentDate) {
         return loginEqual(login).and(
                 currentDateEqual(currentDate)
         );
+    }
+
+    public static Specification<TimeTracking> getOtdelPeriod(String orgCode, LocalDate dateS, LocalDate datePo) {
+        return orgCodeEqual(orgCode)
+                .and(currentDateGt(dateS))
+                .and(currentDateLt(datePo));
     }
 
 }

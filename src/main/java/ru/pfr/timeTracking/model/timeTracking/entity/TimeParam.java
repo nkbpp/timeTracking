@@ -1,6 +1,9 @@
 package ru.pfr.timeTracking.model.timeTracking.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -15,19 +18,37 @@ import javax.persistence.*;
 @Builder
 @EntityListeners(AuditingEntityListener.class)
 public class TimeParam {
+
     @Id
+    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "VARCHAR(12)")
     private String orgCode;
 
     @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "hour", column = @Column(name = "mornBegin_hour")),
+            @AttributeOverride(name = "minute", column = @Column(name = "mornBegin_minute"))
+    })
     private TimeHourMinute mornBegin;
 
     @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "hour", column = @Column(name = "mornEnd_hour")),
+            @AttributeOverride(name = "minute", column = @Column(name = "mornEnd_minute"))
+    })
     private TimeHourMinute mornEnd;
 
     @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "hour", column = @Column(name = "evnBegin_hour")),
+            @AttributeOverride(name = "minute", column = @Column(name = "evnBegin_minute"))
+    })
     private TimeHourMinute evnBegin;
 
     @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "hour", column = @Column(name = "evnEnd_hour")),
+            @AttributeOverride(name = "minute", column = @Column(name = "evnEnd_minute"))
+    })
     private TimeHourMinute evnEnd;
 
     @Column(updatable = false)
@@ -39,29 +60,20 @@ public class TimeParam {
 
     //Значения по умолчанию
     @PrePersist
-    void init(){
-        if(mornBegin == null) {
-            mornBegin = new TimeHourMinute(7,59);
+    void init() {
+        if (mornBegin == null) {
+            mornBegin = new TimeHourMinute(8, 0);
         }
-        if(mornEnd == null) {
-            mornEnd = new TimeHourMinute(9,0);
+        if (mornEnd == null) {
+            mornEnd = new TimeHourMinute(9, 0);
         }
-        if(evnBegin == null) {
-            evnBegin = new TimeHourMinute(15,59);
+        if (evnBegin == null) {
+            evnBegin = new TimeHourMinute(16, 0);
         }
-        if(evnEnd == null) {
-            evnEnd = new TimeHourMinute(17,0);
+        if (evnEnd == null) {
+            evnEnd = new TimeHourMinute(17, 0);
         }
     }
 
 }
 
-@Embeddable
-@Setter
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
-class TimeHourMinute {
-    private Integer hour;
-    private Integer minute;
-}

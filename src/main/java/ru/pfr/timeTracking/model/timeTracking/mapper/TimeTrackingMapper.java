@@ -24,6 +24,9 @@ public class TimeTrackingMapper {
                 .businessTrip(obj.getBusinessTrip())
                 .vacation(obj.getVacation())
                 .sickLeave(obj.getSickLeave())
+                .inicial(obj.getFam() + " " +
+                        obj.getName().charAt(0) + ". " +
+                        ((obj.getOtch() !=null && obj.getOtch().length()>0) ? obj.getOtch().charAt(0) + "." : ""))
                 .build();
     }
 
