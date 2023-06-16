@@ -25,6 +25,11 @@ public class TimeTrackingSpecification {
                 criteriaBuilder.equal(root.get(TimeTracking_.ID), id);
     }
 
+    public static Specification<TimeTracking> idEqual(String id) {
+        return (root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get(TimeTracking_.ID), UUID.fromString(id));
+    }
+
     public static Specification<TimeTracking> orgCodeEqual(String orgCode) {
         return (root, query, criteriaBuilder) ->
                 criteriaBuilder.equal(root.get(TimeTracking_.ORG_CODE), orgCode);

@@ -1,37 +1,49 @@
 $(document).ready(function () {
 
     //инициализация
+    $("#businessTripDateS").val(formatDate(new Date()))
+    $("#businessTripDatePo").val(formatDate(new Date()))
+    $("#vacationDateS").val(formatDate(new Date()))
+    $("#vacationDatePo").val(formatDate(new Date()))
+    $("#sickLeaveDateS").val(formatDate(new Date()))
+    $("#sickLeaveDatePo").val(formatDate(new Date()))
+    $('.datepicker').datepicker({
+        format: 'dd.mm.yyyy',
+        language: "ru"
+    });
     $.ajax({
         url: '/timeTracker/get',
         method: 'post',
         success: function (data) {
             $("#formTimeControl").attr("name", data.id);
-            if (data.beginningOfWork != null) {
-                clearInterval(morningInterval);
-                $("#morning").prop("disabled", true);
-                $("label[for=morning]").removeClass("btn-secondary").removeClass("btn-warning").removeClass("btn-danger").addClass("btn-success");
-                $("label[for=morning]").text(data.beginningOfWork);
-            }
-            if (data.endOfWork != null) {
-                clearInterval(eveningInterval);
-                $("#evening").prop("disabled", true);
-                $("label[for=evening]").removeClass("btn-secondary").removeClass("btn-warning").removeClass("btn-danger").addClass("btn-success");
-                $("label[for=evening]").text(data.endOfWork);
-            }
 
             if (data.vacation == true) {
                 $("#vacation").prop("checked", true);
-                markerInvisible()
+                containerStatusInvisible()
+                $(".vacation").removeClass("d-none");
             } else if (data.sickLeave == true) {
                 $("#sickLeave").prop("checked", true);
-                markerInvisible()
+                containerStatusInvisible()
+                $(".sickLeave").removeClass("d-none");
             } else if (data.businessTrip == true) {
                 $("#businessTrip").prop("checked", true);
-                markerInvisible()
+                containerStatusInvisible()
+                $(".businessTrip").removeClass("d-none");
+            } else {
+                if (data.beginningOfWork != null) {
+                    clearInterval(morningInterval);
+                    $("#morning").prop("disabled", true);
+                    $("label[for=morning]").removeClass("btn-secondary").removeClass("btn-warning").removeClass("btn-danger").addClass("btn-success");
+                    $("label[for=morning]").text(data.beginningOfWork);
+                }
+                if (data.endOfWork != null) {
+                    clearInterval(eveningInterval);
+                    $("#evening").prop("disabled", true);
+                    $("label[for=evening]").removeClass("btn-secondary").removeClass("btn-warning").removeClass("btn-danger").addClass("btn-success");
+                    $("label[for=evening]").text(data.endOfWork);
+                }
+                markerVisible()
             }
-
-            //console.log(data);
-
         },
         error: function (response) {
             initialToats("Ошибка!!!", response.responseText, "err").show();
@@ -43,23 +55,29 @@ $(document).ready(function () {
     $("body").on('change', '[name=statusRadio]', function () {
         let stat = $(this).attr("id");
 
+        containerStatusInvisible()
+
+        let uuid = $("#formTimeControl").attr("name");
+
         if (stat == "atwork") {
             markerVisible()
-        } else {
-            markerInvisible()
+            $.ajax({
+                url: '/timeTracker/status/' + stat + '/' + uuid,
+                method: 'put',
+                success: function (data) {
+                    initialToats("Статус изменен успешно", data, "success").show();
+                },
+                error: function (response) {
+                    initialToats("Ошибка!!!", response.responseText, "err").show();
+                }
+            });
+        } else if (stat == "vacation") {
+            $(".vacation").removeClass("d-none");
+        } else if (stat == "sickLeave") {
+            $(".sickLeave").removeClass("d-none");
+        } else if (stat == "businessTrip") {
+            $(".businessTrip").removeClass("d-none");
         }
-        let uuid = $("#formTimeControl").attr("name");
-        $.ajax({
-            url: '/timeTracker/status/' + stat + '/' + uuid,
-            method: 'put',
-            success: function (data) {
-                initialToats("Статус изменен успешно", data, "success").show();
-            },
-            error: function (response) {
-                initialToats("Ошибка!!!", response.responseText, "err").show();
-            }
-        });
-
 
     });
 
@@ -115,13 +133,9 @@ $(document).ready(function () {
     dateStart = new Date();
     dateStart.setHours(TIMEPARAM.evnBegin.hour);
     dateStart.setMinutes(TIMEPARAM.evnBegin.minute);
-    /*dateStart.setHours(10);
-    dateStart.setMinutes(59);*/
     dateEnd = new Date();
     dateEnd.setHours(TIMEPARAM.evnEnd.hour);
     dateEnd.setMinutes(TIMEPARAM.evnEnd.minute);
-    /*dateEnd.setHours(12);
-    dateEnd.setMinutes(0);*/
     let eveningInterval = setInterval(interval, 1000, "evening",
         dateStart,
         dateEnd
@@ -164,12 +178,46 @@ $(document).ready(function () {
         return;
     }
 
+    $("body").on('click', 'a', function () {
+
+        if ($(this).attr('id') === "businessTripBtn" ||
+            $(this).attr('id') === "vacationBtn" ||
+            $(this).attr('id') === "sickLeaveBtn") {
+
+            let stat = ($(this).attr("id")).replace("Btn","");
+
+            let object = {};
+            object['dateS'] = $("#" + stat + "DateS").val()
+            object['datePo'] = $("#" + stat + "DatePo").val()
+            let json = JSON.stringify(object);
+
+            let uuid = $("#formTimeControl").attr("name");
+
+            console.log(stat)
+            console.log(uuid)
+            $.ajax({
+                url: "/timeTracker/status/period/" + stat + '/' + uuid,
+                data: json,
+                type: 'post',
+                contentType: "application/json",
+                success: function (data) {
+                    initialToats("Статус изменен успешно", data, "success").show();
+                },
+                error: function (response) {
+                    initialToats("Ошибка!!!", response.responseText, "err").show();
+                }
+            });
+        }
+
+
+    });
+
 });
 
 function markerVisible() {
-    $("#marker").removeClass("invisible").addClass("visible");
+    $(".marker").removeClass("d-none");
 }
 
-function markerInvisible() {
-    $("#marker").removeClass("visible").addClass("invisible");
+function containerStatusInvisible() {
+    $("#containerStatus").children().addClass("d-none");
 }

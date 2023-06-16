@@ -33,17 +33,87 @@
                 <label class="btn btn-secondary" for="sickLeave">Больничный</label>
             </div>
 
-            <div id="marker">
-                <div class="p-2">
+            <div id="containerStatus">
+                <div class="p-2 marker  d-none">
                     Утренняя отметка:
                     <input type="radio" class="btn-check" name="morning" id="morning" autocomplete="off"/>
                     <label class="btn btn-secondary" for="morning"></label>
                 </div>
-                <div class="px-2">
+                <div class="px-2 marker  d-none">
                     Вечерняя отметка:
                     <input type="radio" class="btn-check" name="evening" id="evening" autocomplete="off"/>
                     <label class="btn btn-secondary" for="evening"></label>
                 </div>
+
+                <div class="px-2 businessTrip  d-none">
+                    <div class="row">
+                        <div class="col-12">
+                            Установить командировку
+                        </div>
+                    </div>
+                    <div class="col-12 row ">
+                        <div class="col-5">
+                            <label for="businessTripDateS" class="form-label m-0">Дата c</label>
+                            <input type="text" placeholder="дд.мм.гггг" class="form-control datepicker" id="businessTripDateS"
+                                   name="businessTripDateS">
+                        </div>
+                        <div class="col-5">
+                            <label for="businessTripDatePo" class="form-label m-0">Дата по</label>
+                            <input type="text" placeholder="дд.мм.гггг" class="form-control datepicker" id="businessTripDatePo"
+                                   name="businessTripDatePo">
+                        </div>
+                        <div class="col-2 d-flex align-items-end">
+                            <a class="btn btn-secondary" id="businessTripBtn">Выбрать</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="px-2 vacation  d-none">
+                    <div class="row">
+                        <div class="col-12">
+                            Установить отпуск
+                        </div>
+                    </div>
+                    <div class="col-12 row ">
+                        <div class="col-5">
+                            <label for="vacationDateS" class="form-label m-0">Дата c</label>
+                            <input type="text" placeholder="дд.мм.гггг" class="form-control datepicker" id="vacationDateS"
+                                   name="vacationDateS">
+                        </div>
+                        <div class="col-5">
+                            <label for="vacationDatePo" class="form-label m-0">Дата по</label>
+                            <input type="text" placeholder="дд.мм.гггг" class="form-control datepicker" id="vacationDatePo"
+                                   name="vacationDatePo">
+                        </div>
+                        <div class="col-2 d-flex align-items-end">
+                            <a class="btn btn-secondary" id="vacationBtn">Выбрать</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="px-2 sickLeave d-none">
+                    <div class="row">
+                        <div class="col-12">
+                            Установить больничный
+                        </div>
+                    </div>
+                    <div class="col-12 row ">
+                        <div class="col-5">
+                            <label for="sickLeaveDateS" class="form-label m-0">Дата c</label>
+                            <input type="text" placeholder="дд.мм.гггг" class="form-control datepicker" id="sickLeaveDateS"
+                                   name="sickLeaveDateS">
+                        </div>
+                        <div class="col-5">
+                            <label for="sickLeaveDatePo" class="form-label m-0">Дата по</label>
+                            <input type="text" placeholder="дд.мм.гггг" class="form-control datepicker" id="sickLeaveDatePo"
+                                   name="sickLeaveDatePo">
+                        </div>
+                        <div class="col-2 d-flex align-items-end">
+                            <a class="btn btn-secondary" id="sickLeaveBtn">Выбрать</a>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
         </form>

@@ -1,29 +1,19 @@
-package ru.pfr.timeTracking.service;
+package ru.pfr.timeTracking.scheduling;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.pfr.timeTracking.model.acs.entity.AccountSpecification;
 import ru.pfr.timeTracking.model.timeTracking.entity.TimeTracking;
-import ru.pfr.timeTracking.repository.timeTracking.TimeTrackingRepository;
 import ru.pfr.timeTracking.service.acs.AccountsService;
 import ru.pfr.timeTracking.service.timeTracking.TimeTrackingService;
 
 import java.time.LocalDate;
-import java.time.temporal.TemporalAdjusters;
-import java.util.List;
-import java.util.Optional;
 
 
 @RequiredArgsConstructor
 @Component
-public class TimeTrackingAndAcsService {
+public class TimeTrackingAndAcsScheduling {
 
     private final TimeTrackingService timeTrackingService;
     private final AccountsService accountsService;
