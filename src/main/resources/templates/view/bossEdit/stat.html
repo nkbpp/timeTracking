@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head th:replace="fragment/head :: head">
+</head>
+<head>
+    <script type="text/javascript" th:src="@{/js/view/bossEdit/stat.js}"></script>
+</head>
+
+<body class="bg-dark" style="--bs-bg-opacity: .05;">
+
+<div th:insert="fragment/menu :: menu"></div>
+
+<!--<div id="mainContainer"></div>-->
+
+<div class="row justify-content-center">
+
+    <div class="col-5 justify-content-center">
+        <div class="row">
+            <div class="col-12" th:switch="${stat}">
+                <h2 th:case="'sickLeave'">Установить больничный</h2>
+                <h2 th:case="'vacation'">Установить отпуск</h2>
+                <h2 th:case="'businessTrip'">Установить командировку</h2>
+                <h2 th:case="'atwork'">Установить на работе</h2>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <label for="employee" class="form-label m-0">Выберите сотрудника:</label>
+                <select id="employee" name="numDistrict" class="selectized" tabindex="-1" placeholder="Выберите сотрудника">
+                    <option value="" selected="selected"></option>
+                    <option
+                            th:each="a : ${accounts}"
+                            th:text="${a.employees.initials}"
+                            th:value="${a.login}"
+                    ></option>
+                </select>
+            </div>
+        </div>
+        <div class="row ">
+            <div class="col-5">
+                <label for="statusDateS" class="form-label m-0">Дата c</label>
+                <input type="text" placeholder="дд.мм.гггг" class="form-control datepicker" id="statusDateS"
+                       name="statusDateS">
+            </div>
+            <div class="col-5">
+                <label for="statusDatePo" class="form-label m-0">Дата по</label>
+                <input type="text" placeholder="дд.мм.гггг" class="form-control datepicker" id="statusDatePo"
+                       name="statusDatePo">
+            </div>
+            <div class="col-2 d-flex align-items-end">
+                <a class="btn btn-secondary" id="statusBtn" th:name="${stat}">Выбрать</a>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<!--TOASTS-->
+<div class="toast-container position-absolute p-3 bottom-0 end-0">
+</div>
+
+</body>
+<div th:replace="fragment/bottom :: bottom"></div>
+</html>

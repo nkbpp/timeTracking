@@ -2,7 +2,6 @@ package ru.pfr.timeTracking.controller.rest;
 
 import lombok.RequiredArgsConstructor;
 import org.opfr.springbootstarterauthsso.security.UserInfo;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -10,8 +9,14 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import ru.pfr.timeTracking.aop.valid.ValidError;
 import ru.pfr.timeTracking.model.acs.entity.AccountSpecification;
-import ru.pfr.timeTracking.model.timeTracking.dto.*;
-import ru.pfr.timeTracking.model.timeTracking.entity.*;
+import ru.pfr.timeTracking.model.timeTracking.dto.DateSPoDto;
+import ru.pfr.timeTracking.model.timeTracking.dto.TimesOfDayDto;
+import ru.pfr.timeTracking.model.timeTracking.dto.UUIDDto;
+import ru.pfr.timeTracking.model.timeTracking.dto.WorkStatusDto;
+import ru.pfr.timeTracking.model.timeTracking.entity.TimeParam;
+import ru.pfr.timeTracking.model.timeTracking.entity.TimeParamSpecification;
+import ru.pfr.timeTracking.model.timeTracking.entity.TimeTracking;
+import ru.pfr.timeTracking.model.timeTracking.entity.TimeTrackingSpecification;
 import ru.pfr.timeTracking.model.timeTracking.mapper.TimeTrackingMapper;
 import ru.pfr.timeTracking.service.acs.AccountsService;
 import ru.pfr.timeTracking.service.timeTracking.TimeParamService;
@@ -21,10 +26,7 @@ import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -74,7 +76,7 @@ public class TimeTrackingControllerRest {
         try {
 
             TimeTracking timeTracking = timeTrackingService.findOne(
-                    TimeTrackingSpecification.idEqual(UUID.fromString(uuid.getId()))
+                    TimeTrackingSpecification.idEqual(uuid.getId())
             ).orElseThrow();
 
             LocalDateTime currentDate = LocalDateTime.now();
@@ -131,10 +133,10 @@ public class TimeTrackingControllerRest {
     }
 
     /**
-     * Получить контракт если записи нет создать
+     * Получить
      */
     @PostMapping("/get")
-    public ResponseEntity<?> getContract(
+    public ResponseEntity<?> getTimeTracking(
             @AuthenticationPrincipal UserInfo user
     ) {
         try {
@@ -187,44 +189,25 @@ public class TimeTrackingControllerRest {
         }
     }
 
+    /***
+     * Установить командировку, больничный, отпуск
+     */
     @ValidError
-    @PostMapping("/status/period/{stat}/{id}")
-    public ResponseEntity<?> bossStatTable(
+    @PostMapping("/status/period/{stat}")
+    public ResponseEntity<?> editPeriod(
             @Valid WorkStatusDto stat,
-            @Valid UUIDDto id,
+            //@Valid UUIDDto id,
             @Valid @RequestBody DateSPoDto dateSPoDto,
+            @AuthenticationPrincipal UserInfo user,
             Errors errors
     ) {
-
         try {
-            TimeTracking timeTracking = timeTrackingService.findOne(
-                    TimeTrackingSpecification.idEqual(id.getId())
+
+            var account = accountsService.findOne(
+                    AccountSpecification.findByLogin(user.getUsername())
             ).orElseThrow();
 
-            for (LocalDate d = dateSPoDto.getDateS(); d.isBefore(dateSPoDto.getDatePo()) || d.isEqual(dateSPoDto.getDatePo()) ; d = d.plusDays(1L)) {
-                TimeTracking newTimeTracking;
-                if (timeTrackingService.isPresent(timeTracking.getLogin(), d)) {
-                    newTimeTracking = timeTrackingService.findOne(
-                            TimeTrackingSpecification.now(timeTracking.getLogin(), d)
-                    ).orElseThrow();
-                    newTimeTracking.setVacation(stat.getStat().equals("vacation"));
-                    newTimeTracking.setSickLeave(stat.getStat().equals("sickLeave"));
-                    newTimeTracking.setBusinessTrip(stat.getStat().equals("businessTrip"));
-                } else {
-                    timeTracking = TimeTracking.builder()
-                            .login(timeTracking.getLogin())
-                            .orgCode(timeTracking.getOrgCode())
-                            .fam(timeTracking.getFam())
-                            .name(timeTracking.getName())
-                            .otch(timeTracking.getOtch())
-                            .currentDate(d)
-                            .vacation(stat.getStat().equals("vacation"))
-                            .businessTrip(stat.getStat().equals("businessTrip"))
-                            .sickLeave(stat.getStat().equals("sickLeave"))
-                            .build();
-                }
-                timeTrackingService.save(timeTracking);
-            }
+            timeTrackingService.save(stat, dateSPoDto, account);
 
             return new ResponseEntity<>(
                     "",

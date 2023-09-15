@@ -56,4 +56,10 @@ public class TimeTrackingSpecification {
                 .and(currentDateLt(datePo));
     }
 
+    public static Specification<TimeTracking> getLoginPeriod(String login, LocalDate dateS, LocalDate datePo) {
+        return loginEqual(login)
+                .and(currentDateGt(dateS))
+                .and(currentDateLt(datePo));
+    }
+
 }

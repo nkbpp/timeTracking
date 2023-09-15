@@ -6,7 +6,7 @@
 
 </head>
 <head>
-    <script sec:authorize="hasAnyRole('ROLE_BOSS')" type="text/javascript" th:src="@{/js/viev/bossStat.js}"></script>
+    <script sec:authorize="hasAnyRole('ROLE_BOSS')" type="text/javascript" th:src="@{/js/view/bossStat.js}"></script>
 </head>
 
 <body class="bg-dark" style="--bs-bg-opacity: .05;">
@@ -32,6 +32,11 @@
         </div>
     </div>
 </form>
+<div class="row">
+    <div class="col-12 mx-4 my-1 p-0">
+        <a class="btn btn-secondary" id="downloadBtn">Скачать в формате .xls</a>
+    </div>
+</div>
 
 <table class="table table-block table-secondary table-striped
               table-hover table-bordered text-center caption-top table-sm m-0 p-0"

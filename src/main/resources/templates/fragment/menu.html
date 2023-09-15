@@ -21,28 +21,7 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li sec:authorize="hasRole('BOSS1')" class="nav-item dropdown">
-                    <a class="nav-link dropdown-trigger"
-                       href="#"
-                       id="menuFindCitizen"
-                       role="button"
-                       data-bs-toggle="dropdown"
-                       aria-expanded="false"
-                    >
-                        Поиск гражданина
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="menuFindCitizen">
-                        <li><a class="dropdown-item"
-                               href="/overpayment/vievFindCitizenBySnils"
-                               id="vievFindBySnils">Поиск по СНИЛС</a></li>
-                        <li><a class="dropdown-item"
-                               href="/overpayment/vievFindCitizenByFio"
-                               id="vievFindByFio">Поиск по ФИО</a></li>
-                        <li><a class="dropdown-item"
-                               href="/overpayment/vievFindCitizenByDistrict"
-                               id="vievFindByDistrict">Поиск по району</a></li>
-                    </ul>
-                </li>
+
 
                 <li sec:authorize="hasRole('ROLE_BOSS')" class="nav-item dropdown">
                     <a class="nav-link" aria-current="page"
@@ -59,36 +38,31 @@
                         Статистика
                     </a>
                 </li>
-                <li sec:authorize="hasRole('USER')" class="nav-item dropdown" >
+
+                <li sec:authorize="hasRole('ROLE_BOSS')" class="nav-item dropdown">
                     <a class="nav-link dropdown-trigger"
                        href="#"
+                       id="menuFindCitizen"
                        role="button"
                        data-bs-toggle="dropdown"
                        aria-expanded="false"
-                       id="menuReferenceBook"
                     >
-                        Справочник
+                        Редактирование
                     </a>
-                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="menuReferenceBook">
+                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="menuFindCitizen">
                         <li><a class="dropdown-item"
-                               href="/overpayment/referenceBook/vievReferenceBookReasonsForOverpayments">Причины переплат</a></li>
+                               href="/boss/edit/businessTrip"
+                               id="editBusinessTrip">Командировка</a></li>
                         <li><a class="dropdown-item"
-                               href="/overpayment/referenceBook/vievReferenceBookSpecificationOfTheReasonsForOverpayments">Конкретизация причин переплат</a></li>
+                               href="/boss/edit/vacation"
+                               id="editVacation">Отпуск</a></li>
                         <li><a class="dropdown-item"
-                               href="/overpayment/referenceBook/vievDepartment">Управления</a></li>
+                               href="/boss/edit/sickLeave"
+                               id="editSickLeave">Больничный</a></li>
                         <li><a class="dropdown-item"
-                               href="/overpayment/referenceBook/vievDistrict">Районы</a></li>
-                        <li><a class="dropdown-item"
-                               href="/overpayment/referenceBook/vievDocuments">Шаблоны документов</a></li>
+                               href="/boss/edit/atwork"
+                               id="atwork">Работа</a></li>
                     </ul>
-                </li>
-
-                <li sec:authorize="hasRole('OZIADMIN')" class="nav-item dropdown">
-                    <a class="nav-link" aria-current="page"
-                       href="/admin"
-                       id="menuAdmin">
-                        Админка
-                    </a>
                 </li>
 
             </ul>

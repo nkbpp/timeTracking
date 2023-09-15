@@ -1,5 +1,6 @@
 package ru.pfr.timeTracking.model.timeTracking.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
@@ -54,5 +55,16 @@ public class TimeTrackingDto {
     private Boolean businessTrip = false; // командировка
     private Boolean vacation = false; // отпуск
     private Boolean sickLeave = false; // больничный
+
+    /***
+     * Проверяет пропуск
+     */
+    @JsonIgnore
+    public boolean isAbsenteeism(){
+        LocalDateTime currentDateTime = LocalDateTime.now();
+        return  !(businessTrip || vacation || sickLeave) &&
+                beginningOfWork == null && endOfWork == null
+                ;
+    }
 
 }

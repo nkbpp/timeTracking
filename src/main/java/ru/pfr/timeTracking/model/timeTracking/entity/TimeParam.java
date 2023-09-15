@@ -9,6 +9,9 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Data
 // 	генерация всех служебных методов, заменяет сразу команды @ToString, @EqualsAndHashCode, Getter, Setter, @RequiredArgsConstructor
@@ -73,6 +76,36 @@ public class TimeParam {
         if (evnEnd == null) {
             evnEnd = new TimeHourMinute(17, 0);
         }
+    }
+
+    public boolean afterMorning(LocalDate date, LocalDateTime timeNow) {
+        return LocalDateTime.of(
+                date,
+                LocalTime.of(mornEnd.getHour(), mornEnd.getMinute())
+        ).isBefore(timeNow);
+    }
+
+    public boolean afterEvening(LocalDate date, LocalDateTime timeNow) {
+        return LocalDateTime.of(
+                date,
+                LocalTime.of(evnEnd.getHour(), evnEnd.getMinute())
+        ).isBefore(timeNow);
+    }
+
+    @Transient
+    public LocalDateTime getEvening(LocalDate date) {
+        return LocalDateTime.of(
+                date,
+                LocalTime.of(evnEnd.getHour(), evnEnd.getMinute())
+        );
+    }
+
+    @Transient
+    public LocalDateTime getMorning(LocalDate date) {
+        return LocalDateTime.of(
+                date,
+                LocalTime.of(mornEnd.getHour(), mornEnd.getMinute())
+        );
     }
 
 }

@@ -15,6 +15,7 @@ $(document).ready(function () {
         url: '/timeTracker/get',
         method: 'post',
         success: function (data) {
+            console.log(data)
             $("#formTimeControl").attr("name", data.id);
 
             if (data.vacation == true) {
@@ -193,10 +194,8 @@ $(document).ready(function () {
 
             let uuid = $("#formTimeControl").attr("name");
 
-            console.log(stat)
-            console.log(uuid)
             $.ajax({
-                url: "/timeTracker/status/period/" + stat + '/' + uuid,
+                url: "/timeTracker/status/period/" + stat/* + '/' + uuid*/,
                 data: json,
                 type: 'post',
                 contentType: "application/json",
