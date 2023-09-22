@@ -18,30 +18,33 @@ $(document).ready(function () {
             console.log(data)
             $("#formTimeControl").attr("name", data.id);
 
-            if (data.vacation == true) {
+            if (data.vacation === true) {
                 $("#vacation").prop("checked", true);
                 containerStatusInvisible()
                 $(".vacation").removeClass("d-none");
-            } else if (data.sickLeave == true) {
+            } else if (data.sickLeave === true) {
                 $("#sickLeave").prop("checked", true);
                 containerStatusInvisible()
                 $(".sickLeave").removeClass("d-none");
-            } else if (data.businessTrip == true) {
+            } else if (data.businessTrip === true) {
                 $("#businessTrip").prop("checked", true);
                 containerStatusInvisible()
                 $(".businessTrip").removeClass("d-none");
             } else {
+
                 if (data.beginningOfWork != null) {
                     clearInterval(morningInterval);
+                    let morningLabel = $("label[for=morning]");
                     $("#morning").prop("disabled", true);
-                    $("label[for=morning]").removeClass("btn-secondary").removeClass("btn-warning").removeClass("btn-danger").addClass("btn-success");
-                    $("label[for=morning]").text(data.beginningOfWork);
+                    morningLabel.removeClass("btn-secondary").removeClass("btn-warning").removeClass("btn-danger").addClass("btn-success");
+                    morningLabel.text(data.beginningOfWork);
                 }
                 if (data.endOfWork != null) {
                     clearInterval(eveningInterval);
+                    let eveningLabel = $("label[for=evening]");
                     $("#evening").prop("disabled", true);
-                    $("label[for=evening]").removeClass("btn-secondary").removeClass("btn-warning").removeClass("btn-danger").addClass("btn-success");
-                    $("label[for=evening]").text(data.endOfWork);
+                    eveningLabel.removeClass("btn-secondary").removeClass("btn-warning").removeClass("btn-danger").addClass("btn-success");
+                    eveningLabel.text(data.endOfWork);
                 }
                 markerVisible()
             }
@@ -51,19 +54,21 @@ $(document).ready(function () {
         }
     });
 
+    let body = $("body");
 
     //статусы
-    $("body").on('change', '[name=statusRadio]', function () {
+    body.on('change', '[name=statusRadio]', function () {
+        console.log("z nen")
         let stat = $(this).attr("id");
 
         containerStatusInvisible()
 
         let uuid = $("#formTimeControl").attr("name");
 
-        if (stat == "atwork") {
+        if (stat === "atWork") {
             markerVisible()
             $.ajax({
-                url: '/timeTracker/status/' + stat + '/' + uuid,
+                url: '/timeTracker/status/atwork/' + uuid,
                 method: 'put',
                 success: function (data) {
                     initialToats("Статус изменен успешно", data, "success").show();
@@ -72,18 +77,18 @@ $(document).ready(function () {
                     initialToats("Ошибка!!!", response.responseText, "err").show();
                 }
             });
-        } else if (stat == "vacation") {
+        } else if (stat === "vacation") {
             $(".vacation").removeClass("d-none");
-        } else if (stat == "sickLeave") {
+        } else if (stat === "sickLeave") {
             $(".sickLeave").removeClass("d-none");
-        } else if (stat == "businessTrip") {
+        } else if (stat === "businessTrip") {
             $(".businessTrip").removeClass("d-none");
         }
 
     });
 
     //утренняя отметка
-    $("body").on('change', '#morning', function () {
+    body.on('change', '#morning', function () {
         let uuid = $("#formTimeControl").attr("name");
         $.ajax({
             url: '/timeTracker/timesOfDay/morning/' + uuid,
@@ -98,7 +103,7 @@ $(document).ready(function () {
     });
 
     //вечерняя отметка
-    $("body").on('change', '#evening', function () {
+    body.on('change', '#evening', function () {
         let uuid = $("#formTimeControl").attr("name");
         $.ajax({
             url: '/timeTracker/timesOfDay/evening/' + uuid,
@@ -125,7 +130,7 @@ $(document).ready(function () {
         dateEnd
     );
 
-    $("body").on('change', '#morning', function () {
+    body.on('change', '#morning', function () {
         clearInterval(morningInterval);
         $("#morning").prop("disabled", true);
         $("label[for=morning]").removeClass("btn-secondary").removeClass("btn-warning").addClass("btn-success");
@@ -142,7 +147,7 @@ $(document).ready(function () {
         dateEnd
     );
 
-    $("body").on('change', '#evening', function () {
+    body.on('change', '#evening', function () {
         clearInterval(eveningInterval);
         $("#evening").prop("disabled", true);
         $("label[for=evening]").removeClass("btn-secondary").removeClass("btn-warning").addClass("btn-success");
@@ -150,16 +155,17 @@ $(document).ready(function () {
 
     function interval(id, dateStart, dateEnd) {
         let cDate = new Date();
+        let label = $("label[for=" + id + "]");
         if ($(id).prop('checked')) {
-            clearInterval((id == "morning") ? morningInterval : eveningInterval);
-            $("label[for=" + id + "]").removeClass("btn-secondary").removeClass("btn-warning").addClass("btn-success");
+            clearInterval((id === "morning") ? morningInterval : eveningInterval);
+            label.removeClass("btn-secondary").removeClass("btn-warning").addClass("btn-success");
             return;
         } else if ((cDate >= dateStart && cDate <= dateEnd)) {
             $("#morning").removeProp("disabled");
-            $("label[for=" + id + "]").removeClass("btn-secondary").addClass("btn-warning");
+            label.removeClass("btn-secondary").addClass("btn-warning");
             let d = new Date(dateEnd - cDate);
 
-            $("label[for=" + id + "]").html(
+            label.html(
                 padTo2Digits(dateEnd.getHours() - cDate.getHours() - 1) + ":" +
                 padTo2Digits(d.getMinutes()) + ":" +
                 padTo2Digits(d.getSeconds())
@@ -167,19 +173,19 @@ $(document).ready(function () {
             return;
         } else if (cDate < dateStart) {
             $("#" + id).prop("disabled", true);
-            $("label[for=" + id + "]").html("Будет доступна с " + padTo2Digits(dateStart.getHours()) + ":" + padTo2Digits(dateStart.getMinutes()) + ":00");
+            label.html("Будет доступна с " + padTo2Digits(dateStart.getHours()) + ":" + padTo2Digits(dateStart.getMinutes()) + ":00");
             return;
         } else {
             $("#" + id).prop("disabled", true);
-            $("label[for=" + id + "]").html("00:00:00");
-            $("label[for=" + id + "]").removeClass("btn-secondary").removeClass("btn-warning").addClass("btn-danger");
-            clearInterval((id == "morning") ? morningInterval : eveningInterval);
+            label.html("00:00:00");
+            label.removeClass("btn-secondary").removeClass("btn-warning").addClass("btn-danger");
+            clearInterval((id === "morning") ? morningInterval : eveningInterval);
             return;
         }
         return;
     }
 
-    $("body").on('click', 'a', function () {
+    body.on('click', 'a', function () {
 
         if ($(this).attr('id') === "businessTripBtn" ||
             $(this).attr('id') === "vacationBtn" ||
