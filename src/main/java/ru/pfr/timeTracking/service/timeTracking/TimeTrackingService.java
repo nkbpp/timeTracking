@@ -44,9 +44,18 @@ public class TimeTrackingService {
                 newTimeTracking = findOne(
                         TimeTrackingSpecification.now(accounts.getLOGIN_ACC(), d)
                 ).orElseThrow();
-                newTimeTracking.setVacation(stat.getStat().equals("vacation"));
-                newTimeTracking.setSickLeave(stat.getStat().equals("sickLeave"));
-                newTimeTracking.setBusinessTrip(stat.getStat().equals("businessTrip"));
+                //отсутствие
+                if(stat.getStat().equals("absence")){
+                    newTimeTracking.setEndOfWork(null);
+                    newTimeTracking.setBeginningOfWork(null);
+                    newTimeTracking.setVacation(false);
+                    newTimeTracking.setSickLeave(false);
+                    newTimeTracking.setBusinessTrip(false);
+                } else{
+                    newTimeTracking.setVacation(stat.getStat().equals("vacation"));
+                    newTimeTracking.setSickLeave(stat.getStat().equals("sickLeave"));
+                    newTimeTracking.setBusinessTrip(stat.getStat().equals("businessTrip"));
+                }
             } else {
                 newTimeTracking = TimeTracking.builder()
                         .login(accounts.getLOGIN_ACC())

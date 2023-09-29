@@ -7,8 +7,8 @@ $(document).ready(function () {
         language: "ru"
     });
 
-    let itbody = $("body");
-    itbody.on('click', 'a', function () {
+    let itBody = $("body");
+    itBody.on('click', 'a', function () {
         if ($(this).attr('id') === "statusBtn") { //Кнопка найти
             ajaxBossEditStat()
         }
@@ -31,7 +31,8 @@ function ajaxBossEditStat() {
         data: getBossEditStatJson(),
         type: 'post',
         contentType: "application/json",
-        success: function (response) {
+        success: function (data) {
+            initialToats("Статус изменен успешно", data, "success").show();
             console.log("Успешно")
         },
         error: function (response) {

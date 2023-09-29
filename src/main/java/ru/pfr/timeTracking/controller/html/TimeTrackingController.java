@@ -54,12 +54,10 @@ public class TimeTrackingController {
             }
         }
 
-
         String orgCode = user.getOrgCode();
         if (timeParamService.findOne(
                         TimeParamSpecification.codeEqual(orgCode)
-                )
-                .isEmpty()) {
+                ).isEmpty()) {
             timeParamService.save(TimeParam.builder()
                     .orgCode(orgCode)
                     .build());
